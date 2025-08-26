@@ -1,0 +1,71 @@
+# =============================
+# Основные настройки LiteLLM
+# =============================
+general_settings:
+  # включаем авторизацию по ключу
+  enforce_api_key: true
+
+# =============================
+# API-ключи
+# openssl rand -base64 32
+# =============================
+api_keys:
+  - key: "write=xxxapikeyxxx"
+    permissions:
+      - "chat"
+      - "completion"
+      - "embedding"
+    quota_limit: 1000000   # ограничение по токенам (опционально)
+
+  - key: "read=xxxapikeyxxx"
+    permissions:
+      - "chat"
+    quota_limit: 10000     # этот ключ ограничен
+    # 1C
+  - key: "read=xxxapikeyxxx"
+    permissions:
+      - "chat"
+    quota_limit: 1000000   # этот ключ ограничен
+    #fedorenkov
+  - key: "read=xxxapikeyxxx"
+    permissions:
+      - "chat"
+    quota_limit: 10000     # этот ключ ограничен
+# =============================
+# Список моделей
+# =============================
+model_list:
+  # ---------------- LLM‑модели ----------------
+  - model_name: local_llama3
+    litellm_params:
+      model: ollama/llama3
+      api_base: http://ollama:11434
+    cost: 0.000001
+  # ---------------- Stable Diffusion (пример) ----------------
+  - model_name: local_stable-diffusion
+    litellm_params:
+      model: huggingface/runwayml/stable-diffusion-v1-5
+      api_key: xxxapikeyxxx   # ваш HF‑ключ
+      api_base: "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5"
+    cost: 0.000001
+  # --------------------------------------------------------------
+  # При желании можно раскомментировать внешние провайдеры:
+  # - model_name: openai/gpt-4
+  #   litellm_params:
+  #     model: gpt-4
+  #     api_key: ${OPENAI_KEY}
+  #   cost: 0.00003
+  #
+  # - model_name: azure-gpt-4
+  #   litellm_params:
+  #     model: gpt-4
+  #     api_base: https://your-azure.openai.azure.com/
+  #     api_type: azure
+  #     api_version: 2023-05-15
+  #     api_key: ${AZURE_OPENAI_KEY}
+  #   cost: 0.00004
+  # --------------------------------------------------------------
+
+litellm_settings:
+  set_verbose: true
+  drop_params: true

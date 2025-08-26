@@ -1,0 +1,108 @@
+version: '3.8'
+
+# Общие переменные окружения для всех сервисов
+## x-bw-env: &bw-env - шаблоны определения общих переменных
+## <<: *bw-env - вставка шаблона в сервис
+x-all-env: &all-env
+  # --- Основные настройки ---
+  ## Общие переменные
+  env_file: .env
+
+services:
+  ollama:
+    image: docker.io/ollama/ollama:latest
+    container_name: llm_ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - /opt/llm/data/llm_ollama:/root/.ollama
+    env_file: [.env]
+    environment:
+#      <<: *all-env
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+    restart: unless-stopped
+
+  litellm:
+    image: ghcr.io/berriai/litellm:v1.75.5-stable #UPDATE
+    #image: ghcr.io/berriai/litellm:v1.74.9-stable
+    container_name: llm_litellm
+    ports:
+      - "4000:4000"
+    volumes:
+      - /opt/llm/data/llm_litellm:/app/data
+      # Абсолютный путь
+      - /opt/llm/litellm_config.yaml:/app/config.yaml:ro,z
+    env_file: [.env]
+    environment:
+#      <<: *all-env
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+    restart: unless-stopped
+    # для проверки явно передайте конфиг
+    command: ["--config", "/app/config.yaml", "--port", "4000"]
+
+  hf_images_proxy:
+    image: python:3.11-slim
+    container_name: llm_hfimages_proxy
+    working_dir: /app
+    volumes:
+      - /opt/llm/data/llm_hfimages_proxy:/app
+    env_file: [.env]
+    environment:
+#      <<: *all-env
+      - HF_API_TOKEN=${HF_API_TOKEN}
+      - HF_MODEL=${HF_MODEL}
+    command: bash -lc "pip install fastapi uvicorn httpx && uvicorn main:app --host 0.0.0.0 --port 8000"
+    ports:
+      - "8000:8000"
+
+  redis:
+    image: docker.io/library/redis:alpine
+    container_name: llm_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - /opt/llm/data/llm_redis:/data
+    env_file: [.env]
+    environment:
+#      <<: *all-env
+    restart: unless-stopped
+
+  webui:
+#    image: ghcr.io/open-webui/open-webui:main #v0.6.22 (v0.6.22 доступно!)
+    image: ghcr.io/open-webui/open-webui:v0.6.25
+    container_name: llm_webui
+    ports:
+      - "3000:8080"
+    env_file: [.env]
+    environment:
+#      <<: *all-env
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - LITELLM_PROXY_URL=http://litellm:4000
+      - AUTH_REQUIRED=true
+      - ENABLE_OPENAI_API=true              # ← Включаем OpenAI-API режим
+    depends_on:
+      - ollama
+      - litellm
+    volumes:
+      - /opt/llm/data/llm_webui:/app/backend/data
+    restart: unless-stopped
+
+  nginx:
+    image: docker.io/library/nginx:1.27-alpine
+    container_name: llm_nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /opt/llm/data/llm_nginx/conf.d:/etc/nginx/conf.d:ro,z
+      - /opt/llm/data/llm_nginx/certs:/etc/nginx/certs:ro,z
+    depends_on:
+      - webui
+#    env_file: [.env]
+    environment:
+      <<: *all-env
+    restart: unless-stopped

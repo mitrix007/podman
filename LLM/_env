@@ -1,0 +1,12 @@
+# cp _env .env
+OPENAI_KEY=sk-xxxx...                                   # опционально, если проксируете OpenAI
+STRIPE_KEY=sk_test_xxx...                               # Stripe secret key
+# huggingface.co
+HF_API_URI=https://api-inference.huggingface.co
+HF_API_TOKEN=xxxx...    # Huggingface secret key
+HF_MODEL=black-forest-labs/FLUX.1-schnell
+# openrouter.ai
+OR_URI=https://openrouter.ai/api/v1
+OR_API_TOKEN=xxxx...
+# Дополнительно:
+TZ=Europe/Moscow

@@ -1,0 +1,208 @@
+# =============================
+# Основные настройки LiteLLM
+# =============================
+general_settings:
+  # включаем авторизацию по ключу
+  enforce_api_key: true
+
+# =============================
+# API-ключи
+# openssl rand -base64 32
+# =============================
+api_keys:
+  - key: "write=xxx"
+    permissions:
+      - "chat"
+      - "completion"
+      - "embedding"
+    quota_limit: 1000000   # ограничение по токенам (опционально)
+
+  - key: "read=xxxx"
+    permissions:
+      - "chat"
+    quota_limit: 10000     # этот ключ ограничен
+    # 1C
+  - key: "read=xxxxx"
+    permissions:
+      - "chat"
+    quota_limit: 1000000   # этот ключ ограничен
+    #fedorenkov
+  - key: "read=xxxxxx"
+    permissions:
+      - "chat"
+    quota_limit: 10000     # этот ключ ограничен
+# =============================
+# Список моделей
+# =============================
+model_list:
+  # ---------------- LLM‑модели ----------------
+  - model_name: local_llama3
+    litellm_params:
+      model: ollama/llama3
+      api_base: http://ollama:11434
+    cost: 0.000001
+
+  - model_name: local_qwen330ba3bq4km
+    litellm_params:
+      model: "ollama/qwen3:30b-a3b-q4_K_M"
+      api_base: http://ollama:11434
+    cost: 0.000001
+
+  - model_name: local_qwen3_30b_a3b
+    litellm_params:
+      model: "ollama/qwen3:30b-a3b"
+      api_base: http://ollama:11434
+    cost: 0.000001
+
+  - model_name: local_qwen3_30b_a3b_thinking_2507_q4km
+    litellm_params:
+      model: "ollama/qwen3:30b-a3b-thinking-2507-q4_K_M"
+      api_base: http://ollama:11434
+    cost: 0.000001
+
+  - model_name: local_qwen3_30b_a3b_q80
+    litellm_params:
+      model: "ollama/qwen3:30b-a3b-q8_0"
+      api_base: http://ollama:11434
+    cost: 0.000001
+
+  - model_name: local_qwen3_30b
+    litellm_params:
+      model: "ollama/qwen3:30b"
+      api_base: http://ollama:11434
+    cost: 0.000001
+
+  - model_name: local_qwen3_8b                
+    litellm_params:
+      model: "ollama/qwen3:8b"
+      api_base: http://ollama:11434
+    cost: 0.000001
+
+  - model_name: local_qwen3_coder_30b
+    litellm_params:
+      model: "ollama/qwen3-coder:30b"
+      api_base: http://ollama:11434
+    cost: 0.000001
+
+  - model_name: local_qwen2_5_coder_32b
+    litellm_params:
+      model: "ollama/qwen2.5-coder:32b"
+      api_base: http://ollama:11434
+    cost: 0.000001
+
+  - model_name: local_qwen2_5_coder_7b
+    litellm_params:
+      model: "ollama/qwen2.5-coder:7b"
+      api_base: http://ollama:11434
+    cost: 0.000001
+
+  - model_name: local_qwen_0_5b_chat_v1_5_q40
+    litellm_params:
+      model: "ollama/qwen:0.5b-chat-v1.5-q4_0"
+      api_base: http://ollama:11434
+    cost: 0.000001
+
+  - model_name: local_llava_7b
+    litellm_params:
+      model: "ollama/llava:7b"
+      api_base: http://ollama:11434
+    cost: 0.000001
+
+  - model_name: local_gpt_oss_20b
+    litellm_params:
+      model: "ollama/gpt-oss:20b"
+      api_base: http://ollama:11434
+    cost: 0.000001
+
+  # ---------------- Home‑Assistant‑LLM‑модели ----------------
+  - model_name: local_homeassistant_ai_advisor
+    litellm_params:
+      model: "ollama/ALIENTELLIGENCE/homeassistantaiadvisor:latest"
+      api_base: http://ollama:11434
+    cost: 0.000001
+
+  - model_name: local_assist_llm
+    litellm_params:
+      model: "ollama/allenporter/assist-llm:latest"
+      api_base: http://ollama:11434
+    cost: 0.000001
+
+  # ---------------- Embedding‑модели ----------------
+  - model_name: local_all_minilm
+    litellm_params:
+      model: "ollama/all-minilm:latest"
+      api_base: http://ollama:11434
+    cost: 0.000001
+
+  - model_name: local_nomic_embed_text
+    litellm_params:
+      model: "ollama/nomic-embed-text:latest"
+      api_base: http://ollama:11434
+    cost: 0.000001
+
+  - model_name: local_mxbai_embed_large
+    litellm_params:
+      model: "ollama/mxbai-embed-large:latest"
+      api_base: http://ollama:11434
+    cost: 0.000001
+
+  # ---------------- Reranker‑модели (Qwen3‑Reranker) ----------------
+  - model_name: local_qwen3_reranker_8b_f16
+    litellm_params:
+      model: "ollama/dengcao/Qwen3-Reranker-8B:F16"
+      api_base: http://ollama:11434
+    cost: 0.000001
+
+  - model_name: local_qwen3_reranker_8b_q8_0
+    litellm_params:
+      model: "ollama/dengcao/Qwen3-Reranker-8B:Q8_0"
+      api_base: http://ollama:11434
+    cost: 0.000001
+
+  - model_name: local_qwen3_reranker_8b_q5_k_m
+    litellm_params:
+      model: "ollama/dengcao/Qwen3-Reranker-8B:Q5_K_M"
+      api_base: http://ollama:11434
+    cost: 0.000001
+
+  - model_name: local_qwen3_reranker_8b_q4_k_m
+    litellm_params:
+      model: "ollama/dengcao/Qwen3-Reranker-8B:Q4_K_M"
+      api_base: http://ollama:11434
+    cost: 0.000001
+
+  - model_name: local_qwen3_reranker_8b_q3_k_m
+    litellm_params:
+      model: "ollama/dengcao/Qwen3-Reranker-8B:Q3_K_M"
+      api_base: http://ollama:11434
+    cost: 0.000001
+
+  # ---------------- Stable Diffusion (пример) ----------------
+  - model_name: local_stable-diffusion
+    litellm_params:
+      model: huggingface/runwayml/stable-diffusion-v1-5
+      api_key: 
+      api_base: "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5"
+    cost: 0.000001
+
+  # --------------------------------------------------------------
+  # При желании можно раскомментировать внешние провайдеры:
+  # - model_name: openai/gpt-4
+  #   litellm_params:
+  #     model: gpt-4
+  #     api_key: ${OPENAI_KEY}
+  #   cost: 0.00003
+  #
+  # - model_name: azure-gpt-4
+  #   litellm_params:
+  #     model: gpt-4
+  #     api_base: https://your-azure.openai.azure.com/
+  #     api_type: azure
+  #     api_version: 2023-05-15
+  #     api_key: ${AZURE_OPENAI_KEY}
+  #   cost: 0.00004
+  # --------------------------------------------------------------
+
+litellm_settings:
+  set_verbose: true
+  drop_params: true
